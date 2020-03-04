@@ -15,11 +15,11 @@ function selectPivotCol(A, m, n) {
   return q
 }
 
-function selectPivotRow(A, m, n, col) {
+function selectPivotRow(A, m, n, q) {
   let p = 0
   
-  let r = 0 // Ratio of row border val to candidate pivot val.
-            // Select the row that minimizes this value.
+  let r = Infinity // Ratio of row border val to candidate pivot val.
+                   // Select the row that minimizes this value.
 
   for (let i = 1; i < m+1; i++) {
     let candidate = A[i][q]  // candidate pivot value
@@ -27,14 +27,15 @@ function selectPivotRow(A, m, n, col) {
                                       // (use epsilon to avoid rounding error)
       // TODO: Do we need this check?
       // let border = A[i][n+1]  // border value for candidate row
-      // if (border <= 0) {
-      //   p = i
-      //   break
-      // } else
+      // // if (A[i][n+1] <= 0) {
+      // //   p = i
+      // //   break
+      // } else {
       let r2 = A[i][n+1] / candidate
       if (r2 < r) {
         p = i
         r = r2
+        // }
       }
     }
   }
@@ -44,19 +45,51 @@ function selectPivotRow(A, m, n, col) {
 }
 
 function pivot(A, m, n, p, q) {
+  // NOTE: Cells must be updated in the proper order, since 
+  // some cells are calculated based on another cell's new value.
+
+  // update cells in same row as pivot
+  for (let j = 1; j <= n+1; j++) {
+    if (j != q) {
+      A[p][j] = A[p][j] / A[p][q]
+    }
+  }
+
+  // update cells not aligned with pivot
   for (let i = 1; i <= m+1; i++) {
-    for (let j = 1; j <= n+1; j++) {
-      if (i == p && j == q) { // pivot cell
-        A[p][q] = 1. / pivot_val
-      } else if (i == p) { // same row as pivot
-        A[i][j] = A[p][j] / A[p][q]
-      } else if (j == q) { // same col as pivot
-        A[i][j] = (0. - A[i][q]) / A[p][q]
-      } else {
-        A[i][j] = A[i][j] - A[i][q] * A[p][j]
+    if (i != p) {
+      for (let j = 1; j <= n+1; j++) {
+        if (j != q) {
+          A[i][j] = A[i][j] - A[i][q] * A[p][j]
+        }
       }
     }
   }
+
+  // update cells in same col as pivot
+  for (let i = 1; i <= m+1; i++) {
+    if (i != p) {
+      A[i][q] = (0. - A[i][q]) / A[p][q]
+    }
+  }
+
+  // update pivot cell
+  A[p][q]= 1. / A[p][q]
+
+  // TODO: use this code for non-in-place version?
+  // for (let i = 1; i <= m+1; i++) {
+  //   for (let j = 1; j <= n+1; j++) {
+  //     if (i == p && j == q) { // pivot cell
+  //       A[p][q] = 1. / A[p][q]
+  //     } else if (i == p) { // same row as pivot
+  //       A[i][j] = A[i][j] / A[p][q]
+  //     } else if (j == q) { // same col as pivot
+  //       A[i][j] = (0. - A[i][j]) / A[p][q]
+  //     } else {
+  //       A[i][j] = A[i][j] - A[i][q] * A[p][j]
+  //     }
+  //   }
+  // }
   
   // swap pivot row/col labels
   let temp = A[p][0]
@@ -104,6 +137,11 @@ module.exports = function calcEquilibrium(game_matrix) {
   matrix_shifted.forEach((row, i) => row.unshift(-i))
   
   console.table(matrix_shifted)
+
+  simplex(matrix_shifted)
+
+  console.table(matrix_shifted)
+
  
   // unshift
 
