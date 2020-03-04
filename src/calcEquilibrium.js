@@ -1,5 +1,3 @@
-const Simplex = require('./SimplexJS')
-
 function selectPivotCol(A, m, n) {
   let q = 0
 
@@ -102,7 +100,7 @@ function simplex(A) {
   let p, q                // pivot point a(p, q)
   
   q = selectPivotCol(A, m, n)
-  while (q != 0) {  // while we still have a valid pivot col
+  while (q > 0) {  // while we still have a valid pivot col
     p = selectPivotRow(A, m, n, q)
     pivot(A, m, n, p, q)
     q = selectPivotCol(A, m, n)
@@ -115,11 +113,11 @@ function extractTableauResult(A, m, n, shift) {
   result.player1 = Array(m)
   result.player2 = Array(n)
 
-  let val = 1 / A[m+1][n+1];
+  let val = 1 / A[m+1][n+1]
 
   for (let j = 1; j <= n; j++) {
     if (A[0][j] < 0) {
-      result.player1[-A[0][j]-1] = A[m+1][j] * val;
+      result.player1[-A[0][j]-1] = A[m+1][j] * val
     } else {
       result.player2[A[0][j]-1] = 0
     }
@@ -127,13 +125,13 @@ function extractTableauResult(A, m, n, shift) {
   
   for (let i = 1; i <= m; i++) {
     if (A[i][0] < 0) {
-      result.player1[-A[i][0]-1] = 0;
+      result.player1[-A[i][0]-1] = 0
     } else {
-      result.player2[A[i][0]-1] = A[i][n+1] * val;
+      result.player2[A[i][0]-1] = A[i][n+1] * val
     }
 	}
   
-  result.value = val - shift
+  result.value = val - shift  // unshift
 
   return result
 }
@@ -147,22 +145,22 @@ module.exports = function calcEquilibrium(game_matrix) {
   // since Player I could opt to always choose that row. We can safely add a 
   // constant to each element of the matrix to accomplish this, then subtract 
   // the constant from the final optimized value.
-  let matrix_shifted = [...game_matrix].map(row => [...row]) // clone game matrix
-  let shift = 1 - Math.min(...matrix_shifted[0])  // the value that when added results in a min value of 1
-  matrix_shifted = matrix_shifted.map(row => row.map(element => element + shift)) // apply shift
+  let shifted_matrix = [...game_matrix].map(row => [...row]) // clone game matrix
+  let shift = 1 - Math.min(...shifted_matrix[0])  // the value that when added results in a min value of 1
+  shifted_matrix = shifted_matrix.map(row => row.map(element => element + shift)) // apply shift
 
   // construct intial tableau
-  matrix_shifted.push(Array(n).fill(-1))  // append row of -1s
-  matrix_shifted.slice(0, -1).forEach(row => row.push(1)) // append col of 1s
-  matrix_shifted.slice(-1)[0].push(0) // set lower right to 0
+  shifted_matrix.push(Array(n).fill(-1))  // append row of -1s
+  shifted_matrix.slice(0, -1).forEach(row => row.push(1)) // append col of 1s
+  shifted_matrix.slice(-1)[0].push(0) // set lower right to 0
  
   // add col labels, represented as positive integers
-  matrix_shifted.unshift([...Array(n+1).keys()].map(element => element + 1)) 
+  shifted_matrix.unshift([...Array(n+1).keys()].map(element => element + 1)) 
 
   // add row labels, represented as negative integers
-  matrix_shifted.forEach((row, i) => row.unshift(-i))
+  shifted_matrix.forEach((row, i) => row.unshift(-i))
 
-  simplex(matrix_shifted)
+  simplex(shifted_matrix)
 
-  return extractTableauResult(matrix_shifted, m, n, shift)
+  return extractTableauResult(shifted_matrix, m, n, shift)
 }
