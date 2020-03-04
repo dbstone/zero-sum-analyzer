@@ -3,13 +3,11 @@ const Simplex = require('./SimplexJS')
 function selectPivotCol(A, m, n) {
   let q = 0
 
-  let j = 1
-  while (j < n+1) {
+  for (let j = 1; j < n+1; j++) {
     if (A[m+1][j] < 0) {
       q = j
       break
     }
-    j++
   }
   
   return q
@@ -69,12 +67,12 @@ function pivot(A, m, n, p, q) {
   // update cells in same col as pivot
   for (let i = 1; i <= m+1; i++) {
     if (i != p) {
-      A[i][q] = (0. - A[i][q]) / A[p][q]
+      A[i][q] = (0 - A[i][q]) / A[p][q]
     }
   }
 
   // update pivot cell
-  A[p][q]= 1. / A[p][q]
+  A[p][q]= 1 / A[p][q]
 
   // TODO: use this code for non-in-place version?
   // for (let i = 1; i <= m+1; i++) {
@@ -111,8 +109,36 @@ function simplex(A) {
 	}
 }
 
-module.exports = function calcEquilibrium(game_matrix) {
+// extract game value and equilibrium strategies from a solved tableau
+function extractTableauResult(A, m, n, shift) {
   let result = {}
+  result.player1 = Array(m)
+  result.player2 = Array(n)
+
+  let val = 1 / A[m+1][n+1];
+
+  for (let j = 1; j <= n; j++) {
+    if (A[0][j] < 0) {
+      result.player1[-A[0][j]-1] = A[m+1][j] * val;
+    } else {
+      result.player2[A[0][j]-1] = 0
+    }
+	}
+  
+  for (let i = 1; i <= m; i++) {
+    if (A[i][0] < 0) {
+      result.player1[-A[i][0]-1] = 0;
+    } else {
+      result.player2[A[i][0]-1] = A[i][n+1] * val;
+    }
+	}
+  
+  result.value = val - shift
+
+  return result
+}
+
+module.exports = function calcEquilibrium(game_matrix) {
   let m = game_matrix.length
   let n = game_matrix[0].length
 
@@ -135,15 +161,8 @@ module.exports = function calcEquilibrium(game_matrix) {
 
   // add row labels, represented as negative integers
   matrix_shifted.forEach((row, i) => row.unshift(-i))
-  
-  console.table(matrix_shifted)
 
   simplex(matrix_shifted)
 
-  console.table(matrix_shifted)
-
- 
-  // unshift
-
-  return result
+  return extractTableauResult(matrix_shifted, m, n, shift)
 }
