@@ -43,58 +43,38 @@ function selectPivotRow(A, m, n, col) {
   return p
 }
 
+function pivot(A, m, n, p, q) {
+  for (let i = 1; i <= m+1; i++) {
+    for (let j = 1; j <= n+1; j++) {
+      if (i == p && j == q) { // pivot cell
+        A[p][q] = 1. / pivot_val
+      } else if (i == p) { // same row as pivot
+        A[i][j] = A[p][j] / A[p][q]
+      } else if (j == q) { // same col as pivot
+        A[i][j] = (0. - A[i][q]) / A[p][q]
+      } else {
+        A[i][j] = A[i][j] - A[i][q] * A[p][j]
+      }
+    }
+  }
+  
+  // swap pivot row/col labels
+  let temp = A[p][0]
+  A[p][0] = A[0][q]
+  A[0][q] = temp
+}
+
 // apply the simplex pivot method
 function simplex(A) {
   let m = A.length - 2    // rows
   let n = A[0].length - 2 // cols
-  let i, j                // row, col index for iterating
   let p, q                // pivot point a(p, q)
-  let pivot_val           // value at pivot point
   
   q = selectPivotCol(A, m, n)
-  // TODO: can we allow A to start with non-negative col border?
   while (q != 0) {  // while we still have a valid pivot col
     p = selectPivotRow(A, m, n, q)
-
-		pivot_val = A[p][q]
-  
-    j = 1
-		while (j <= n1) {
-		    if (j != q) {
-          A[p][j] = A[p][j] / pivot_val
-        }
-			j++
-		}
-    
-    i = 1
-		while (i <= m+1) {			/* Pivot main part */
-		  if (i != p) {
-			  j = 1
-				while (j <= n+1) {
-          if (j != q) {
-            A[i][j] = A[i][j] - A[i][q] * A[p][j]
-          }
-          j++
-				}
-		  }
-			i++
-		}
-    
-    i = 1
-		while (i <= m1) {			/* Pivot col */
-      if (i != p) {
-        A[i][q] = (0. - A[i][q]) / pivot_val
-      }
-			i++
-    }
-
-		A[p][q] = 1. / pivot_val
-		t1 = A[p][0]
-		A[p][0] = A[0][q]
-		A[0][q] = t1				/* End pivot */
-   
-    // select next pivot col
-
+    pivot(A, m, n, p, q)
+    q = selectPivotCol(A, m, n)
 	}
 }
 
