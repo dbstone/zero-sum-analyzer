@@ -83,8 +83,6 @@ class Game extends React.Component {
     let numberMatrix = this.state.squares.map(row => row.map(element => Number(element)))
     let result = calcEquilibrium(numberMatrix)
     result.value = round(result.value, 3)
-    // result.player1 = result.player1.map(element => round(element, 3))
-    // result.player2 = result.player2.map(element => round(element, 3))
     this.setState({result: result})
   }
 
