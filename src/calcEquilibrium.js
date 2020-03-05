@@ -46,16 +46,16 @@ function pivot(A, m, n, p, q) {
 
   // update cells in same row as pivot
   for (let j = 1; j <= n+1; j++) {
-    if (j != q) {
+    if (j !== q) {
       A[p][j] = A[p][j] / A[p][q]
     }
   }
 
   // update cells not aligned with pivot
   for (let i = 1; i <= m+1; i++) {
-    if (i != p) {
+    if (i !== p) {
       for (let j = 1; j <= n+1; j++) {
-        if (j != q) {
+        if (j !== q) {
           A[i][j] = A[i][j] - A[i][q] * A[p][j]
         }
       }
@@ -64,7 +64,7 @@ function pivot(A, m, n, p, q) {
 
   // update cells in same col as pivot
   for (let i = 1; i <= m+1; i++) {
-    if (i != p) {
+    if (i !== p) {
       A[i][q] = (0 - A[i][q]) / A[p][q]
     }
   }

@@ -7,20 +7,18 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}\\start"
-        },
-        {
-            "type": "node",
-            "request": "launch",
             "name": "Node: Current File",
             "program": "${file}",
             "skipFiles": [
                 "<node_internals>/**"
             ]
+        },
+        {
+            "name": "Chrome",
+            "type": "chrome",
+            "request": "launch",
+            "url": "localhost:3000",
+            "webRoot": "${workspaceFolder}/wwwroot"
         }
     ]
 }

@@ -1,5 +1,7 @@
 const calcEquilibrium = require('./calcEquilibrium')
 
+// TODO: make some proper assert tests
+
 rps_matrix = [
   [0, -1, 1],
   [1, 0, -1],
