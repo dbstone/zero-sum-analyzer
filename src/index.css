@@ -5,13 +5,12 @@ body {
   color: #fff;
 }
 
-.square {
-  background: #000;
+.dataCell {
+  background: inherit;
   border: 1px solid #999;
   float: left;
-  font-size: 14px;
-  font-weight: bold;
-  color: #fff;
+  color: inherit;
+  font: inherit;
   line-height: 34px;
   height: 34px;
   margin-right: -1px;
@@ -21,14 +20,19 @@ body {
   width: 50px;
 }
 
+/* for empty space at top left of matrix */
+.hiddenCell {
+  border: 1px solid black;
+  float: left;
+  margin-right: -1px;
+  margin-top: -1px;
+  width: 50px;
+}
+
 .board-row:after {
   clear: both;
   content: "";
   display: table;
-}
-
-ol, ul {
-  padding-left: 30px;
 }
 
 /* hide arrow button control for input elements */

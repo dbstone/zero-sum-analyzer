@@ -8,7 +8,7 @@ function round(val, decimalPlaces) {
 
 function Cell(props) {
   return (
-    <input className="square" type={props.type} value={props.value} onChange={props.onChange}/>
+    <input className={props.className} type={props.type} value={props.value} onChange={props.onChange}/>
   )
 }
 
@@ -18,6 +18,7 @@ class Board extends React.Component {
       <Cell
         value={this.props.dataCells[i][j]}
         onChange={(event) => this.props.onChange(i, j, event)}
+        className="dataCell"
         type='number'
       />
     )
@@ -27,6 +28,7 @@ class Board extends React.Component {
     return (
       <Cell
         value={label}
+        className="dataCell"
         type='text'
       />
     )
@@ -49,7 +51,7 @@ class Board extends React.Component {
     let rows = []
     
     let colLabels = []
-    colLabels.push(this.renderLabelCell())
+    colLabels.push(<div className='hiddenCell'/>)
     for (let j = 0; j < this.props.dataCells[0].length; j++) {
       colLabels.push(this.renderLabelCell(this.props.colLabels[j]))
     }
