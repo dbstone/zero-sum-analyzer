@@ -6,26 +6,37 @@ function round(val, decimalPlaces) {
   return Math.round((val + Number.EPSILON) * multiplier) / multiplier
 }
 
-function Square(props) {
+function Cell(props) {
   return (
-    <input className="square" type="number" value={props.value} onChange={props.onChange}/>
+    <input className="square" type={props.type} value={props.value} onChange={props.onChange}/>
   )
 }
 
 class Board extends React.Component {
-  renderCell(i, j) {
+  renderDataCell(i, j) {
     return (
-      <Square
-        value={this.props.squares[i][j]}
+      <Cell
+        value={this.props.dataCells[i][j]}
         onChange={(event) => this.props.onChange(i, j, event)}
+        type='number'
+      />
+    )
+  }
+  
+  renderLabelCell(label) {
+    return (
+      <Cell
+        value={label}
+        type='text'
       />
     )
   }
 
   renderRow(i) {
     let cols = []
-    for (let j = 0; j < this.props.squares[0].length; j++) {
-      cols.push(this.renderCell(i, j))
+    cols.push(this.renderLabelCell(this.props.rowLabels[i]))
+    for (let j = 0; j < this.props.dataCells[0].length; j++) {
+      cols.push(this.renderDataCell(i, j))
     }
     return (
       <div className="board-row">
@@ -36,9 +47,23 @@ class Board extends React.Component {
 
   render() {
     let rows = []
-    for (let i = 0; i < this.props.squares.length; i++) {
+    
+    let colLabels = []
+    colLabels.push(this.renderLabelCell())
+    for (let j = 0; j < this.props.dataCells[0].length; j++) {
+      colLabels.push(this.renderLabelCell(this.props.colLabels[j]))
+    }
+
+    rows.push(
+      <div className="board-row">
+        {colLabels}
+      </div>
+    )
+
+    for (let i = 0; i < this.props.dataCells.length; i++) {
       rows.push(this.renderRow(i))
     }
+
     return rows
   }
 }
@@ -65,20 +90,22 @@ class Game extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      squares: Array(3).fill(Array(3).fill(0)),
+      dataCells: Array(3).fill(Array(3).fill(0)),
+      rowLabels: Array(3),
+      colLabels: Array(3),
       result: {value: null, player1: null, player2: null}
     }
     this.handleChange = this.handleChange.bind(this)
   }
 
   handleChange(i, j, event) {
-    const squares = [...this.state.squares].map(row => [...row])
-    squares[i][j] = event.target.value
-    this.setState({squares: squares})
+    const dataCells = [...this.state.dataCells].map(row => [...row])
+    dataCells[i][j] = event.target.value
+    this.setState({dataCells: dataCells})
   }
 
   calculate() {
-    let numberMatrix = this.state.squares.map(row => row.map(element => Number(element)))
+    let numberMatrix = this.state.dataCells.map(row => row.map(element => Number(element)))
     let result = calcEquilibrium(numberMatrix)
     result.value = round(result.value, 3)
     this.setState({result: result})
@@ -89,7 +116,9 @@ class Game extends React.Component {
       <div className="game">
         <div className="game-board">
           <Board 
-            squares={this.state.squares}
+            dataCells={this.state.dataCells}
+            rowLabels={this.state.rowLabels}
+            colLabels={this.state.colLabels}
             onChange={this.handleChange}
           />
         </div>
