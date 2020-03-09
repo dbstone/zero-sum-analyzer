@@ -8,12 +8,12 @@ function round(val, decimalPlaces) {
 
 function Square(props) {
   return (
-    <input className="square" type="text" value={props.value} onChange={props.onChange}/>
+    <input className="square" type="number" value={props.value} onChange={props.onChange}/>
   )
 }
 
 class Board extends React.Component {
-  renderSquare(i, j) {
+  renderCell(i, j) {
     return (
       <Square
         value={this.props.squares[i][j]}
@@ -22,26 +22,24 @@ class Board extends React.Component {
     )
   }
 
-  render() {
+  renderRow(i) {
+    let cols = []
+    for (let j = 0; j < this.props.squares[0].length; j++) {
+      cols.push(this.renderCell(i, j))
+    }
     return (
-      <div>
-        <div className="board-row">
-          {this.renderSquare(0, 0)}
-          {this.renderSquare(0, 1)}
-          {this.renderSquare(0, 2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(1, 0)}
-          {this.renderSquare(1, 1)}
-          {this.renderSquare(1, 2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(2, 0)}
-          {this.renderSquare(2, 1)}
-          {this.renderSquare(2, 2)}
-        </div>
+      <div className="board-row">
+        {cols}
       </div>
     )
+  }
+
+  render() {
+    let rows = []
+    for (let i = 0; i < this.props.squares.length; i++) {
+      rows.push(this.renderRow(i))
+    }
+    return rows
   }
 }
 
