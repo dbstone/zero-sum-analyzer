@@ -5,7 +5,7 @@ body {
   color: #fff;
 }
 
-.dataCell {
+.data-cell {
   background: inherit;
   border: 1px solid #999;
   float: left;
@@ -17,16 +17,25 @@ body {
   margin-top: -1px;
   padding: 0;
   text-align: center;
-  width: 50px;
+  width: 70px;
 }
 
 /* for empty space at top left of matrix */
-.hiddenCell {
+.hidden-cell {
   border: 1px solid black;
   float: left;
   margin-right: -1px;
   margin-top: -1px;
-  width: 50px;
+  width: 70px;
+}
+
+.calculate-button {
+  /* float: right; */
+  margin-top: 10px;
+}
+
+.add-row-col-button {
+  margin: 5px
 }
 
 .board-row:after {

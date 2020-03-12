@@ -17,8 +17,8 @@ class Board extends React.Component {
     return (
       <Cell
         value={this.props.dataCells[i][j]}
-        onChange={(event) => this.props.onChange(i, j, event)}
-        className="dataCell"
+        onChange={(event) => this.props.onDataChange(i, j, event)}
+        className="data-cell"
         type='number'
       />
     )
@@ -28,7 +28,7 @@ class Board extends React.Component {
     return (
       <Cell
         value={label}
-        className="dataCell"
+        className="data-cell"
         type='text'
       />
     )
@@ -51,10 +51,13 @@ class Board extends React.Component {
     let rows = []
     
     let colLabels = []
-    colLabels.push(<div className='hiddenCell'/>)
+    colLabels.push(<div className='hidden-cell'/>)
     for (let j = 0; j < this.props.dataCells[0].length; j++) {
       colLabels.push(this.renderLabelCell(this.props.colLabels[j]))
     }
+    colLabels.push(
+      <button className='add-row-col-button' onClick={this.props.onAddCol}>+</button>
+    )
 
     rows.push(
       <div className="board-row">
@@ -65,6 +68,10 @@ class Board extends React.Component {
     for (let i = 0; i < this.props.dataCells.length; i++) {
       rows.push(this.renderRow(i))
     }
+    
+    rows.push(
+      <button className='add-row-col-button' onClick={this.props.onAddRow}>+</button>
+    )
 
     return rows
   }
@@ -93,14 +100,16 @@ class Game extends React.Component {
     super(props)
     this.state = {
       dataCells: Array(3).fill(Array(3).fill(0)),
-      rowLabels: Array(3),
-      colLabels: Array(3),
+      rowLabels: ['Rock', 'Paper', 'Scissors'],
+      colLabels: ['Rock', 'Paper', 'Scissors'],
       result: {value: null, player1: null, player2: null}
     }
-    this.handleChange = this.handleChange.bind(this)
+    this.handleDataChange = this.handleDataChange.bind(this)
+    this.addRow = this.addRow.bind(this)
+    this.addCol = this.addCol.bind(this)
   }
 
-  handleChange(i, j, event) {
+  handleDataChange(i, j, event) {
     const dataCells = [...this.state.dataCells].map(row => [...row])
     dataCells[i][j] = event.target.value
     this.setState({dataCells: dataCells})
@@ -113,6 +122,26 @@ class Game extends React.Component {
     this.setState({result: result})
   }
 
+  addRow() {
+    const rowLabels = [...this.state.rowLabels]
+    rowLabels.push("")
+    this.setState({rowLabels: rowLabels})
+    
+    const dataCells = [...this.state.dataCells].map(row => [...row])
+    dataCells.push(Array(dataCells[0].length).fill(0))
+    this.setState({dataCells: dataCells})
+  }
+
+  addCol() {
+    const colLabels = [...this.state.colLabels]
+    colLabels.push("")
+    this.setState({colLabels: colLabels})
+    
+    const dataCells = [...this.state.dataCells].map(row => [...row])
+    dataCells.forEach(row => row.push(0))
+    this.setState({dataCells: dataCells})
+  }
+
   render() {
     return (
       <div className="game">
@@ -121,7 +150,9 @@ class Game extends React.Component {
             dataCells={this.state.dataCells}
             rowLabels={this.state.rowLabels}
             colLabels={this.state.colLabels}
-            onChange={this.handleChange}
+            onDataChange={this.handleDataChange}
+            onAddRow={this.addRow}
+            onAddCol={this.addCol}
           />
         </div>
         <div className="calculate-button">
