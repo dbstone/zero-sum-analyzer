@@ -24,10 +24,11 @@ class Board extends React.Component {
     )
   }
   
-  renderLabelCell(label) {
+  renderLabelCell(label, onChange) {
     return (
       <Cell
         value={label}
+        onChange={onChange}
         className="data-cell"
         type='text'
       />
@@ -36,7 +37,7 @@ class Board extends React.Component {
 
   renderRow(i) {
     let cols = []
-    cols.push(this.renderLabelCell(this.props.rowLabels[i]))
+    cols.push(this.renderLabelCell(this.props.rowLabels[i], event => this.props.onRowLabelChange(i, event)))
     for (let j = 0; j < this.props.dataCells[0].length; j++) {
       cols.push(this.renderDataCell(i, j))
     }
@@ -53,7 +54,7 @@ class Board extends React.Component {
     let colLabels = []
     colLabels.push(<div className='hidden-cell'/>)
     for (let j = 0; j < this.props.dataCells[0].length; j++) {
-      colLabels.push(this.renderLabelCell(this.props.colLabels[j]))
+      colLabels.push(this.renderLabelCell(this.props.colLabels[j], event => this.props.onColLabelChange(j, event)))
     }
     colLabels.push(
       <button className='add-row-col-button' onClick={this.props.onAddCol}>+</button>
@@ -107,12 +108,26 @@ class Game extends React.Component {
     this.handleDataChange = this.handleDataChange.bind(this)
     this.addRow = this.addRow.bind(this)
     this.addCol = this.addCol.bind(this)
+    this.handleRowLabelChange = this.handleRowLabelChange.bind(this)
+    this.handleColLabelChange = this.handleColLabelChange.bind(this)
   }
 
   handleDataChange(i, j, event) {
     const dataCells = [...this.state.dataCells].map(row => [...row])
     dataCells[i][j] = event.target.value
     this.setState({dataCells: dataCells})
+  }
+
+  handleRowLabelChange(i, event) {
+    const rowLabels = [...this.state.rowLabels]
+    rowLabels[i] = event.target.value
+    this.setState({rowLabels: rowLabels})
+  }
+  
+  handleColLabelChange(j, event) {
+    const colLabels = [...this.state.colLabels]
+    colLabels[j] = event.target.value
+    this.setState({colLabels: colLabels})
   }
 
   calculate() {
@@ -151,6 +166,8 @@ class Game extends React.Component {
             rowLabels={this.state.rowLabels}
             colLabels={this.state.colLabels}
             onDataChange={this.handleDataChange}
+            onRowLabelChange={this.handleRowLabelChange}
+            onColLabelChange={this.handleColLabelChange}
             onAddRow={this.addRow}
             onAddCol={this.addCol}
           />
