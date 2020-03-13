@@ -37,6 +37,11 @@ class Board extends React.Component {
 
   renderRow(i) {
     let cols = []
+    cols.push(
+      <div className='first-col-hidden-cell'>
+        <button className='mod-row-button' onClick={this.props.onAddCol}>-</button>
+      </div>
+    )
     cols.push(this.renderLabelCell(this.props.rowLabels[i], event => this.props.onRowLabelChange(i, event)))
     for (let j = 0; j < this.props.dataCells[0].length; j++) {
       cols.push(this.renderDataCell(i, j))
@@ -51,14 +56,35 @@ class Board extends React.Component {
   render() {
     let rows = []
     
+    let removeColButtons = []
+    removeColButtons.push(<div className='first-col-hidden-cell'/>)
+    removeColButtons.push(<div className='hidden-cell'/>)
+    for (let j = 0; j < this.props.dataCells[0].length; j++) {
+      removeColButtons.push(
+        <div className='hidden-cell'>
+          <button className='mod-col-button' onClick={this.props.onAddCol}>-</button>
+        </div>
+      )
+    }
+
+    removeColButtons.push(
+      <div className='hidden-cell'>
+        <button className='mod-col-button' onClick={this.props.onAddCol}>+</button>
+      </div>
+    )
+
+    rows.push(
+      <div className="board-row">
+        {removeColButtons}
+      </div>
+    )
+    
     let colLabels = []
+    colLabels.push(<div className='first-col-hidden-cell'/>)
     colLabels.push(<div className='hidden-cell'/>)
     for (let j = 0; j < this.props.dataCells[0].length; j++) {
       colLabels.push(this.renderLabelCell(this.props.colLabels[j], event => this.props.onColLabelChange(j, event)))
     }
-    colLabels.push(
-      <button className='add-row-col-button' onClick={this.props.onAddCol}>+</button>
-    )
 
     rows.push(
       <div className="board-row">
@@ -71,7 +97,11 @@ class Board extends React.Component {
     }
     
     rows.push(
-      <button className='add-row-col-button' onClick={this.props.onAddRow}>+</button>
+      <div className='board-row'>
+        <div className='first-col-hidden-cell'>
+          <button className='mod-row-button' onClick={this.props.onAddRow}>+</button>
+        </div>
+      </div>
     )
 
     return rows
@@ -86,9 +116,11 @@ function Results(props) {
   if (props.result.value !== null) {
     return (
       <div>
-        <div>{props.result.value}</div>
-        <div>Row player: {String(props.result.player1.map(e => toPercentString(e)))}</div>
-        <div>Col player: {String(props.result.player2.map(e => toPercentString(e)))}</div>
+        <h3>Value: {props.result.value}</h3>
+        <h3>Row-player strategy:</h3>
+        {props.result.player1.map((e, i) => <div>{props.rowLabels[i]} {toPercentString(e)}<br/></div>)}
+        <h3>Col-player strategy:</h3>
+        {props.result.player2.map((e, i) => <div>{props.colLabels[i]} {toPercentString(e)}<br/></div>)}
       </div>
     )
   } else {
@@ -172,13 +204,17 @@ class Game extends React.Component {
             onAddCol={this.addCol}
           />
         </div>
-        <div className="calculate-button">
-          <button onClick={() => this.calculate()}>
+        <div>
+          <button className="calculate-button" onClick={() => this.calculate()}>
             calculate
           </button>
         </div>
         <div className="game-info">
-          <Results result={this.state.result}/>
+          <Results 
+            result={this.state.result}
+            rowLabels={this.state.rowLabels}
+            colLabels={this.state.colLabels}
+          />
         </div>
       </div>
     )

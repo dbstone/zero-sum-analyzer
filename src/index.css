@@ -11,8 +11,8 @@ body {
   float: left;
   color: inherit;
   font: inherit;
-  line-height: 34px;
-  height: 34px;
+  line-height: 35px;
+  height: 35px;
   margin-right: -1px;
   margin-top: -1px;
   padding: 0;
@@ -20,7 +20,6 @@ body {
   width: 70px;
 }
 
-/* for empty space at top left of matrix */
 .hidden-cell {
   border: 1px solid black;
   float: left;
@@ -29,19 +28,50 @@ body {
   width: 70px;
 }
 
+.first-col-hidden-cell {
+  border: 1px solid black;
+  float: left;
+  margin-right: -1px;
+  margin-top: -1px;
+  width: 35px;
+}
+
 .calculate-button {
-  /* float: right; */
+  background: inherit;
+  color: inherit;
   margin-top: 10px;
 }
 
-.add-row-col-button {
-  margin: 5px
+.mod-row-button {
+  background: inherit;
+  color: inherit;
+  border-color: #999;
+  display: block;
+  margin-left: auto;
+  margin-right: 10px;
+  margin-top: 7px;
+  margin-bottom: 5px;
+}
+
+.mod-col-button {
+  background: inherit;
+  color: inherit;
+  border-color: #999;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 6px;
+  margin-bottom: 6px;
 }
 
 .board-row:after {
   clear: both;
   content: "";
   display: table;
+}
+
+.game-info {
+  margin-top: 40px
 }
 
 /* hide arrow button control for input elements */
