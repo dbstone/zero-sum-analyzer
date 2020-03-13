@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/zero-sum-analyzer/static/css/main.78d8fd9b.chunk.css",
+    "main.js": "/zero-sum-analyzer/static/js/main.f20d2f46.chunk.js",
+    "main.js.map": "/zero-sum-analyzer/static/js/main.f20d2f46.chunk.js.map",
+    "runtime-main.js": "/zero-sum-analyzer/static/js/runtime-main.27b99aa6.js",
+    "runtime-main.js.map": "/zero-sum-analyzer/static/js/runtime-main.27b99aa6.js.map",
+    "static/js/2.770c6d5e.chunk.js": "/zero-sum-analyzer/static/js/2.770c6d5e.chunk.js",
+    "static/js/2.770c6d5e.chunk.js.map": "/zero-sum-analyzer/static/js/2.770c6d5e.chunk.js.map",
+    "index.html": "/zero-sum-analyzer/index.html",
+    "precache-manifest.5738563d6aa2a3073e5aa5fc3da1a072.js": "/zero-sum-analyzer/precache-manifest.5738563d6aa2a3073e5aa5fc3da1a072.js",
+    "service-worker.js": "/zero-sum-analyzer/service-worker.js",
+    "static/css/main.78d8fd9b.chunk.css.map": "/zero-sum-analyzer/static/css/main.78d8fd9b.chunk.css.map",
+    "static/js/2.770c6d5e.chunk.js.LICENSE.txt": "/zero-sum-analyzer/static/js/2.770c6d5e.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.27b99aa6.js",
+    "static/js/2.770c6d5e.chunk.js",
+    "static/css/main.78d8fd9b.chunk.css",
+    "static/js/main.f20d2f46.chunk.js"
+  ]
+}
