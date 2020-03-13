@@ -39,7 +39,7 @@ class Board extends React.Component {
     let cols = []
     cols.push(
       <div className='first-col-hidden-cell'>
-        <button className='mod-row-button' onClick={this.props.onAddCol}>-</button>
+        <button className='mod-row-button' onClick={event => this.props.onRemoveRow(i)}>-</button>
       </div>
     )
     cols.push(this.renderLabelCell(this.props.rowLabels[i], event => this.props.onRowLabelChange(i, event)))
@@ -62,7 +62,7 @@ class Board extends React.Component {
     for (let j = 0; j < this.props.dataCells[0].length; j++) {
       removeColButtons.push(
         <div className='hidden-cell'>
-          <button className='mod-col-button' onClick={this.props.onAddCol}>-</button>
+          <button className='mod-col-button' onClick={event => this.props.onRemoveCol(j)}>-</button>
         </div>
       )
     }
@@ -132,7 +132,9 @@ class Game extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      dataCells: Array(3).fill(Array(3).fill(0)),
+      dataCells: [[0, -1, 1],
+                  [1, 0, -1],
+                  [-1, 1, 0]],
       rowLabels: ['Rock', 'Paper', 'Scissors'],
       colLabels: ['Rock', 'Paper', 'Scissors'],
       result: {value: null, player1: null, player2: null}
@@ -140,6 +142,8 @@ class Game extends React.Component {
     this.handleDataChange = this.handleDataChange.bind(this)
     this.addRow = this.addRow.bind(this)
     this.addCol = this.addCol.bind(this)
+    this.removeRow = this.removeRow.bind(this)
+    this.removeCol = this.removeCol.bind(this)
     this.handleRowLabelChange = this.handleRowLabelChange.bind(this)
     this.handleColLabelChange = this.handleColLabelChange.bind(this)
   }
@@ -167,6 +171,26 @@ class Game extends React.Component {
     let result = calcEquilibrium(numberMatrix)
     result.value = round(result.value, 3)
     this.setState({result: result})
+  }
+  
+  removeRow(i) {
+    const rowLabels = [...this.state.rowLabels]
+    rowLabels.splice(i,1)
+    this.setState({rowLabels: rowLabels})
+    
+    const dataCells = [...this.state.dataCells].map(row => [...row])
+    dataCells.splice(i,1)
+    this.setState({dataCells: dataCells})
+  }
+
+  removeCol(j) {
+    const colLabels = [...this.state.colLabels]
+    colLabels.splice(j,1)
+    this.setState({colLabels: colLabels})
+    
+    const dataCells = [...this.state.dataCells].map(row => [...row])
+    dataCells.forEach(row => row.splice(j,1))
+    this.setState({dataCells: dataCells})
   }
 
   addRow() {
@@ -202,6 +226,8 @@ class Game extends React.Component {
             onColLabelChange={this.handleColLabelChange}
             onAddRow={this.addRow}
             onAddCol={this.addCol}
+            onRemoveRow={this.removeRow}
+            onRemoveCol={this.removeCol}
           />
         </div>
         <div>
